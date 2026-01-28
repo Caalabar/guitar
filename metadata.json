@@ -1,0 +1,5 @@
+{
+  "name": "Guitarreto Web",
+  "description": "A rhythm game powered by YouTube, featuring a custom canvas game engine and hit detection system.",
+  "requestFramePermissions": []
+}
