@@ -12,8 +12,10 @@ export interface Note {
   id: number;
   laneId: number;
   y: number; // Vertical position (0 to 100)
-  hit: boolean; // Has it been hit?
+  hit: boolean; // Has it been hit (head)?
   missed: boolean; // Has it passed the line?
+  length: number; // > 0 for long notes
+  isHolding?: boolean; // Is currently being held
 }
 
 export interface GameState {
@@ -29,4 +31,20 @@ export enum GameStatus {
   MENU,
   PLAYING,
   GAME_OVER
+}
+
+export enum DifficultyLevel {
+  EASY = "EASY",
+  MEDIUM = "MEDIUM",
+  HARD = "HARD",
+  EXPERT = "EXPERT"
+}
+
+export interface DifficultyConfig {
+  label: string;
+  spawnRate: number;
+  noteSpeed: number;
+  color: string;
+  chordChance: number;
+  longNoteChance: number;
 }

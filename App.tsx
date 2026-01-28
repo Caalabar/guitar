@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import GameCanvas from './components/GameCanvas';
 import YouTubePlayer from './components/YouTubePlayer';
-import { MAX_HEALTH, YOUTUBE_VIDEO_ID } from './constants';
-import { GameStatus } from './types';
+import { MAX_HEALTH, YOUTUBE_VIDEO_ID, DIFFICULTY_SETTINGS } from './constants';
+import { GameStatus, DifficultyLevel } from './types';
 
 // Helper to extract ID from various YouTube URL formats
 const extractVideoId = (url: string): string | null => {
@@ -21,6 +21,7 @@ function App() {
   const [maxCombo, setMaxCombo] = useState(0);
   const [health, setHealth] = useState(MAX_HEALTH);
   const [playerReady, setPlayerReady] = useState(false);
+  const [difficulty, setDifficulty] = useState<DifficultyLevel>(DifficultyLevel.MEDIUM);
 
   // Video State
   const [currentVideoId, setCurrentVideoId] = useState(YOUTUBE_VIDEO_ID);
@@ -136,6 +137,10 @@ function App() {
         onHealthUpdate={handleHealthUpdate}
         width={dimensions.width}
         height={dimensions.height}
+        noteSpeed={DIFFICULTY_SETTINGS[difficulty].noteSpeed}
+        spawnRate={DIFFICULTY_SETTINGS[difficulty].spawnRate}
+        chordChance={DIFFICULTY_SETTINGS[difficulty].chordChance}
+        longNoteChance={DIFFICULTY_SETTINGS[difficulty].longNoteChance}
       />
 
       {/* UI Layer: HUD */}
@@ -189,6 +194,26 @@ function App() {
 
             {status === GameStatus.MENU && (
               <>
+
+                {/* Difficulty Selector */}
+                <div className="mb-4">
+                  <div className="text-xs text-gray-400 mb-2 uppercase font-bold tracking-widest">Select Difficulty</div>
+                  <div className="flex justify-center gap-2">
+                    {(Object.keys(DifficultyLevel) as Array<keyof typeof DifficultyLevel>).map((level) => (
+                      <button
+                        key={level}
+                        onClick={() => setDifficulty(DifficultyLevel[level])}
+                        className={`px-3 py-1 text-xs font-bold rounded border transition-all ${difficulty === DifficultyLevel[level]
+                          ? `bg-white text-black border-white scale-110 shadow-lg ${DIFFICULTY_SETTINGS[DifficultyLevel[level]].color.replace('text-', 'shadow-')}/50`
+                          : 'bg-black/50 text-gray-500 border-gray-700 hover:border-gray-500'
+                          }`}
+                      >
+                        {level}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
                 <p className="text-gray-300 mb-6 text-sm">
                   Controls: <span className="text-green-400 font-bold">A</span> <span className="text-red-400 font-bold">S</span> <span className="text-yellow-400 font-bold">J</span> <span className="text-blue-400 font-bold">K</span>
                 </p>

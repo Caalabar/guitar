@@ -25,3 +25,10 @@ export const SCORE_MISS = -5;
 export const MAX_HEALTH = 100;
 export const HEALTH_PENALTY = 10;
 export const HEALTH_GAIN = 2;
+
+export const DIFFICULTY_SETTINGS = {
+  EASY: { label: 'EASY', spawnRate: 600, noteSpeed: 0.4, color: 'text-green-400', chordChance: 0, longNoteChance: 0 },
+  MEDIUM: { label: 'MEDIUM', spawnRate: 400, noteSpeed: 0.6, color: 'text-yellow-400', chordChance: 0.1, longNoteChance: 0.1 },
+  HARD: { label: 'HARD', spawnRate: 250, noteSpeed: 0.9, color: 'text-red-400', chordChance: 0.3, longNoteChance: 0.25 },
+  EXPERT: { label: 'EXPERT', spawnRate: 150, noteSpeed: 1.2, color: 'text-purple-500', chordChance: 0.5, longNoteChance: 0.4 },
+};
