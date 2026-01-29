@@ -30,6 +30,7 @@ export interface GameState {
 export enum GameStatus {
   MENU,
   PLAYING,
+  PAUSED,
   GAME_OVER
 }
 

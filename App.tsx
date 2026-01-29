@@ -22,6 +22,7 @@ function App() {
   const [health, setHealth] = useState(MAX_HEALTH);
   const [playerReady, setPlayerReady] = useState(false);
   const [difficulty, setDifficulty] = useState<DifficultyLevel>(DifficultyLevel.MEDIUM);
+  const [gameId, setGameId] = useState(0);
 
   // Video State
   const [currentVideoId, setCurrentVideoId] = useState(YOUTUBE_VIDEO_ID);
@@ -50,8 +51,27 @@ function App() {
     setCombo(0);
     setMaxCombo(0);
     setHealth(MAX_HEALTH);
+    setGameId(prev => prev + 1);
     setStatus(GameStatus.PLAYING);
   };
+
+  const togglePause = () => {
+    if (status === GameStatus.PLAYING) {
+      setStatus(GameStatus.PAUSED);
+    } else if (status === GameStatus.PAUSED) {
+      setStatus(GameStatus.PLAYING);
+    }
+  };
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        togglePause();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [status]);
 
   const endGame = () => {
     setStatus(GameStatus.GAME_OVER);
@@ -132,6 +152,7 @@ function App() {
 
       {/* Game Layer: Canvas */}
       <GameCanvas
+        key={gameId}
         isPlaying={status === GameStatus.PLAYING}
         onScoreUpdate={handleScoreUpdate}
         onHealthUpdate={handleHealthUpdate}
@@ -144,9 +165,14 @@ function App() {
       />
 
       {/* UI Layer: HUD */}
-      {status === GameStatus.PLAYING && (
+      {(status === GameStatus.PLAYING || status === GameStatus.PAUSED) && (
         <div className="absolute top-0 left-0 w-full p-6 z-30 flex justify-between items-start text-white pointer-events-none">
           <div className="flex flex-col gap-2">
+            <div className="pointer-events-auto">
+              <button onClick={togglePause} className="mb-2 bg-gray-800 hover:bg-gray-700 text-white p-2 rounded-full border border-gray-600 transition-colors">
+                {status === GameStatus.PAUSED ? '▶️' : '⏸️'}
+              </button>
+            </div>
             <div className="text-4xl font-black italic tracking-tighter" style={{ textShadow: '0 0 10px #fff' }}>
               {score.toLocaleString()}
             </div>
@@ -253,6 +279,25 @@ function App() {
                   PLAY AGAIN
                 </button>
 
+              </>
+            )}
+
+            {status === GameStatus.PAUSED && (
+              <>
+                <h2 className="text-3xl font-bold text-white mb-6">PAUSED</h2>
+
+                <button
+                  onClick={togglePause}
+                  className="w-full py-4 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-lg text-xl mb-3 shadow-lg"
+                >
+                  RESUME
+                </button>
+                <button
+                  onClick={() => setStatus(GameStatus.MENU)}
+                  className="w-full py-3 bg-gray-800 hover:bg-gray-700 text-gray-300 font-bold rounded-lg"
+                >
+                  QUIT
+                </button>
               </>
             )}
 

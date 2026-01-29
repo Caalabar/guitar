@@ -164,14 +164,7 @@ const GameCanvas: React.FC<GameCanvasProps> = ({ isPlaying, onScoreUpdate, onHea
     };
   }, [handleKeyDown, handleKeyUp]);
 
-  // Reset game state when play starts
-  useEffect(() => {
-    if (isPlaying) {
-      notesRef.current = [];
-      lastSpawnTimeRef.current = performance.now();
-      scoreFeedbackRef.current = null;
-    }
-  }, [isPlaying]);
+
 
   const spawnNote = useCallback((timestamp: number) => {
     if (timestamp - lastSpawnTimeRef.current > spawnRate) {
